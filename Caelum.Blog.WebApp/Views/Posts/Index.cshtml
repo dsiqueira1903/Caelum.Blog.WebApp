@@ -7,13 +7,20 @@
         <th>Titulo</th>
         <th>Resumo </th>
         <th>Categoria</th>
+        <th>Ações</th>
     </tr>
     @foreach (Post post in Model)
     {
         <tr>
             <td>@post.Titulo</td>
             <td>@post.Resumo</td>
-            <td>@post.Categoria</td>
+            <td>
+                <a href="/Posts/Categoria/@post.Categoria">@post.Categoria</a>
+            </td>
+            <td>
+                <a href="/Posts/Editar/@post.Id">Editar</a>
+                <a href="/Posts/Excluir/@post.Id">Excluir</a>
+            </td>
         </tr>
     }
 </table>

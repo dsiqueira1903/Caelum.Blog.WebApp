@@ -6,49 +6,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
+using Caelum.Blog.WebApp.Data;
 
 
 namespace Caelum.Blog.WebApp.Controllers
 {
     public class PostsController : Controller
     {
-        IList<Post> lista = new List<Post>();
-
-        public PostsController()
-        {
-        }
-
+       
         public ViewResult Index()
         {
-            IList<Post> lista = new List<Post>();
-
-            // ADO.NET
-            var stringCnx = "Server=(localdb)\\MSSQLLocalDB;Database=BlogCaelum;Trusted_Connection=true";
-            
-            // conexão com o BD
-            IDbConnection conexaoBD = new SqlConnection(stringCnx);
-            conexaoBD.Open();
-
-            // consulta: select * from Posts
-            IDbCommand select = conexaoBD.CreateCommand();
-            select.CommandText = "select * from Posts";
-
-            // resultado
-            IDataReader leitor = select.ExecuteReader();
-
-            while (leitor.Read())
-            {
-                Post post = new Post();
-                post.Id = Convert.ToInt32(leitor["Id"]);
-                post.Titulo = Convert.ToString(leitor["Titulo"]);
-                post.Resumo = Convert.ToString(leitor["Resumo"]);
-                post.Categoria = Convert.ToString(leitor["Categoria"]);
-                lista.Add(post);
-            }
-
-            leitor.Close();
-            conexaoBD.Close();
-
+            var lista = new PostDAO().Listar();
             return View(lista);
         }
 
@@ -61,21 +29,44 @@ namespace Caelum.Blog.WebApp.Controllers
         public IActionResult Inclusao(Post novoPost)
         {
             // ADO.NET
-            var stringCnx = "Server=(localdb)\\MSSQLLocalDB;Database=BlogCaelum;Trusted_Connection=true";
-
-            // conexão com o BD
-            IDbConnection conexaoBD = new SqlConnection(stringCnx);
-            conexaoBD.Open();
-
-            // consulta: select * from Posts
-            IDbCommand insert = conexaoBD.CreateCommand();
-            insert.CommandText = $"insert into Posts (titulo, resumo, categoria) values ('{novoPost.Titulo}', '{novoPost.Resumo}', '{novoPost.Categoria}')";
-
-            insert.ExecuteNonQuery();
-
-            conexaoBD.Close();
-
+            var dao = new PostDAO();
+            dao.Incluir(novoPost);
             return RedirectToAction("Index");
+
+        }
+
+       
+
+        public IActionResult Editar (int id)
+        {
+            var dao = new PostDAO();
+            var post = dao.BuscaPorId(id);
+            return View(post);
+        }
+
+        [HttpPost]
+
+        public IActionResult Alteracao(Post post)
+        {
+            var dao = new PostDAO();
+            dao.Atualizar(post);
+            return RedirectToAction("Index");
+        }
+        
+
+        public IActionResult Excluir (int id)
+        {
+            var dao = new PostDAO();
+            var post = dao.BuscaPorId(id);
+            dao.Apagar(post);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Categoria([Bind(Prefix ="id")] string cat)
+        {
+            var dao = new PostDAO();
+            var posts = dao.BuscaPorCategoria(cat);
+            return View("Index",posts);
         }
     }
 }
