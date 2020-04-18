@@ -1,0 +1,19 @@
+﻿@model IList<Post>
+
+<h1>Lista de posts</h1>
+
+<table>
+    <tr>
+        <th>Titulo</th>
+        <th>Resumo </th>
+        <th>Categoria</th>
+    </tr>
+    @foreach (Post post in Model)
+    {
+        <tr>
+            <td>@post.Titulo</td>
+            <td>@post.Resumo</td>
+            <td>@post.Categoria</td>
+        </tr>
+    }
+</table>
