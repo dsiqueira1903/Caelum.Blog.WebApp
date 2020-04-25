@@ -1,23 +1,32 @@
 ﻿@model Post
 
-<form action="/Posts/Alteracao" method="post">
+    <form action="/Posts/Alteracao" method="post">
 
-    <input type="hidden" name="id" value="@Model.Id" />
+        <div>
+            @Html.ValidationSummary()
+        </div>
 
-    <div>
-        <label>Título:</label>
-        <input name="titulo" value="@Model.Titulo"/>
-    </div>
+        <input type="hidden" name="id" value="@Model.Id" />
+        <input type="hidden" name="DataPublicacao" value="@Model.DataPublicacao" />
+        <input type="hidden" name="Publicado" value="@Model.Publicado.ToString()" />
 
-    <div>
-        <label>Resumo:</label>
-        <input name="resumo" value="@Model.Resumo"/>
-    </div>
+        <div>
+            <label>Título:</label>
+            <input name="titulo" value="@Model.Titulo" />
+            @Html.ValidationMessageFor(p => p.Titulo)
+        </div>
 
-    <div>
-        <label>Categoria:</label>
-        <input name="categoria" value="@Model.Categoria"/>
-    </div>
+        <div>
+            <label>Resumo:</label>
+            <input name="resumo" value="@Model.Resumo" />
+            @Html.ValidationMessageFor(p => p.Resumo)
+        </div>
 
-    <button>Gravar</button>
-</form>
+        <div>
+            <label>Categoria:</label>
+            <input name="categoria" value="@Model.Categoria" />
+            @Html.ValidationMessageFor(p => p.Categoria)
+        </div>
+
+        <button>Gravar</button>
+    </form>

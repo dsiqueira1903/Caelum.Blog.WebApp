@@ -22,16 +22,21 @@ namespace Caelum.Blog.WebApp.Controllers
 
         public ViewResult Novo()
         {
-            return View();
+            return View(new Post());
         }
 
         [HttpPost]
         public IActionResult Inclusao(Post novoPost)
         {
-            // ADO.NET
-            var dao = new PostDAO();
-            dao.Incluir(novoPost);
-            return RedirectToAction("Index");
+            
+
+            if (ModelState.IsValid)
+            {
+                var dao = new PostDAO();
+                dao.Incluir(novoPost);
+                return RedirectToAction("Index");
+            }
+            return View("Novo", novoPost);
 
         }
 
@@ -47,10 +52,15 @@ namespace Caelum.Blog.WebApp.Controllers
         [HttpPost]
 
         public IActionResult Alteracao(Post post)
+
         {
-            var dao = new PostDAO();
-            dao.Atualizar(post);
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var dao = new PostDAO();
+                dao.Atualizar(post);
+                return RedirectToAction("Index");
+            }
+            return View("Editar", post);
         }
         
 
@@ -67,6 +77,19 @@ namespace Caelum.Blog.WebApp.Controllers
             var dao = new PostDAO();
             var posts = dao.BuscaPorCategoria(cat);
             return View("Index",posts);
+        }
+
+        public IActionResult PublicaPost(int id)
+        {
+            var dao = new PostDAO();
+            var post = dao.BuscaPorId(id);
+
+            post.DataPublicacao = DateTime.Today;
+            post.Publicado = true;
+
+            dao.Atualizar(post);
+
+            return RedirectToAction("Index");
         }
     }
 }

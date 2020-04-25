@@ -28,6 +28,8 @@ namespace Caelum.Blog.WebApp.Data
             ctx.Posts.Remove(post);
             ctx.SaveChanges();
         }
+
+
         
 
         public IList<Post> Listar()
@@ -46,6 +48,16 @@ namespace Caelum.Blog.WebApp.Data
         {
             BlogContext ctx = new BlogContext();
             return ctx.Posts.Where(p => p.Categoria.Contains(cat)).ToList();
+        }
+
+        public void Publica(int id)
+        {
+            using (BlogContext contexto = new BlogContext())
+            {
+                Post post = contexto.Posts.Find(id);
+                post.DataPublicacao = DateTime.Today;
+                contexto.SaveChanges();
+            }
         }
 
     }

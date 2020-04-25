@@ -8,6 +8,7 @@
         <th>Resumo </th>
         <th>Categoria</th>
         <th>Ações</th>
+        <th>Publicado?</th>
     </tr>
     @foreach (Post post in Model)
     {
@@ -20,6 +21,16 @@
             <td>
                 <a href="/Posts/Editar/@post.Id">Editar</a>
                 <a href="/Posts/Excluir/@post.Id">Excluir</a>
+                
+            </td>
+            <td>
+                @if(post.DataPublicacao.HasValue)
+                {
+                    @Html.Raw(post.DataPublicacao.Value.ToString("dd/MM/yyyy"))
+                }else
+                {
+                <a href="/Posts/PublicaPost/@post.Id">Publicar</a>
+                }
             </td>
         </tr>
     }
