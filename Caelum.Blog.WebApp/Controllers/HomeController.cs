@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Caelum.Blog.WebApp.Models;
+using Caelum.Blog.WebApp.Data;
 
 namespace Caelum.Blog.WebApp.Controllers
 {
@@ -20,7 +21,9 @@ namespace Caelum.Blog.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var dao = new PostDAO();
+            var publicados = dao.Listar().Where(p => p.Publicado);
+            return View(publicados);
         }
 
         public IActionResult Privacy()

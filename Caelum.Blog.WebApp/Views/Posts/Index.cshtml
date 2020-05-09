@@ -1,8 +1,14 @@
 ﻿@model IList<Post>
 
+@{
+    Layout = "_LayoutAdmin";
+}
+
 <h1>Lista de posts</h1>
 
-<table>
+<a class="btn btn-outline-primary mb-3"  asp-action="Novo" asp-controller="Posts">Novo Post</a>
+
+<table class="table table-hover table-striped">
     <tr>
         <th>Titulo</th>
         <th>Resumo </th>
@@ -16,20 +22,26 @@
             <td>@post.Titulo</td>
             <td>@post.Resumo</td>
             <td>
-                <a href="/Posts/Categoria/@post.Categoria">@post.Categoria</a>
+                <a asp-action="Categoria" asp-controller="Posts" asp-route-categoria="@post.Categoria">@post.Categoria</a>
             </td>
             <td>
-                <a href="/Posts/Editar/@post.Id">Editar</a>
-                <a href="/Posts/Excluir/@post.Id">Excluir</a>
-                
+                <a asp-action="Editar" asp-route-id="@post.Id">
+                    <i class="fas fa-edit"></i>
+                </a>
+
+                <a asp-action="Excluir" asp-controller="Posts" asp-route-id="@post.Id">
+                    <i class="fas fa-trash"></i>
+                </a>
+
             </td>
             <td>
-                @if(post.DataPublicacao.HasValue)
+                @if (post.DataPublicacao.HasValue)
                 {
-                    @Html.Raw(post.DataPublicacao.Value.ToString("dd/MM/yyyy"))
-                }else
+                    <span>@post.DataPublicacao.Value.ToString("dd/MM/yyyy")</span>
+                }
+                else
                 {
-                <a href="/Posts/PublicaPost/@post.Id">Publicar</a>
+                    <a asp-action="Publicar" asp-controller="Posts" asp-route-ID="@post.Id">Publicar</a>
                 }
             </td>
         </tr>

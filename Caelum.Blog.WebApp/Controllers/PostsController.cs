@@ -20,13 +20,18 @@ namespace Caelum.Blog.WebApp.Controllers
             return View(lista);
         }
 
-        public ViewResult Novo()
+        private IActionResult ViewForm(Post model)
         {
-            return View(new Post());
+            return View("Form", model);
+        }
+        [HttpGet]
+        public IActionResult Novo()
+        {
+            return ViewForm(new Post());
         }
 
         [HttpPost]
-        public IActionResult Inclusao(Post novoPost)
+        public IActionResult Novo(Post novoPost)
         {
             
 
@@ -36,22 +41,22 @@ namespace Caelum.Blog.WebApp.Controllers
                 dao.Incluir(novoPost);
                 return RedirectToAction("Index");
             }
-            return View("Novo", novoPost);
+            return ViewForm(novoPost);
 
         }
 
        
-
+        [HttpGet]
         public IActionResult Editar (int id)
         {
             var dao = new PostDAO();
             var post = dao.BuscaPorId(id);
-            return View(post);
+            return ViewForm(post);
         }
 
         [HttpPost]
 
-        public IActionResult Alteracao(Post post)
+        public IActionResult Editar(Post post)
 
         {
             if (ModelState.IsValid)
@@ -60,7 +65,7 @@ namespace Caelum.Blog.WebApp.Controllers
                 dao.Atualizar(post);
                 return RedirectToAction("Index");
             }
-            return View("Editar", post);
+            return ViewForm(post);
         }
         
 
@@ -90,6 +95,17 @@ namespace Caelum.Blog.WebApp.Controllers
             dao.Atualizar(post);
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult CategoriaAutocomplete(string term)
+        {
+            var dao = new PostDAO();
+            var categorias = dao.Listar()
+                .Where(p => p.Categoria.Contains(term))
+                .Select(p => p.Categoria)
+                .Distinct();
+            return Json(categorias);
+
         }
     }
 }
